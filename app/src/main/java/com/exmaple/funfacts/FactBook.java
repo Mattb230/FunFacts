@@ -1,5 +1,6 @@
 package com.exmaple.funfacts;
 
+import java.lang.annotation.Documented;
 import java.util.Random;
 
 /**
@@ -24,5 +25,9 @@ public class FactBook {
     public String getFact(){
         String fact = mFacts[new Random().nextInt(mFacts.length)];
         return fact;
+    }
+
+    public String getFirstFact(){
+        return mFacts[0];
     }
 }

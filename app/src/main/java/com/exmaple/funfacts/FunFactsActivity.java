@@ -2,6 +2,7 @@ package com.exmaple.funfacts;
 
 
 import android.graphics.Color;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +17,35 @@ import java.util.Random;
 public class FunFactsActivity extends AppCompatActivity {
 
     public static final String TAG = FunFactsActivity.class.getSimpleName();
+    private static final String KEY_FACT = "KEY_FACT";
+    private static final String KEY_COLOR = "KEY_COLOR";
     private FactBook mFactBook = new FactBook();
     //declare view variables
     private TextView mFactTextView;
     private Button mShowFactButton;
     private RelativeLayout mRelativeLayout;
+    private String mFact = mFactBook.getFirstFact();
+    private int mColor = Color.parseColor("#51b46d");
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(KEY_FACT, mFact);
+        outState.putInt(KEY_COLOR, mColor);
+    }//end onSaveInstanceState
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mFact = savedInstanceState.getString(KEY_FACT);
+        mFactTextView.setText(mFact);
+
+        mColor = savedInstanceState.getInt(KEY_COLOR);
+        mRelativeLayout.setBackgroundColor(mColor);
+        mShowFactButton.setTextColor(mColor);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,21 +64,17 @@ public class FunFactsActivity extends AppCompatActivity {
         mShowFactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFactTextView.setText(mFactBook.getFact());
+                mFact = mFactBook.getFact();
+                mFactTextView.setText(mFact);
+                //get random color values and generate a ransom color
                 int r = rand.nextInt(255);
                 int g = rand.nextInt(255);
                 int b = rand.nextInt(255);
+                mColor = Color.rgb(r, g, b);
 
-                int randomColor = Color.rgb(r, g, b);
-
-                mRelativeLayout.setBackgroundColor(randomColor);
-                mShowFactButton.setTextColor(randomColor);
+                mRelativeLayout.setBackgroundColor(mColor);
+                mShowFactButton.setTextColor(mColor);
             }
         });//end listener
-
-
-        //Toast.makeText(FunFactsActivity.this, "Cowboys Rule", Toast.LENGTH_SHORT).show();
-
-        Log.d(TAG, "We are logging from the onCreate Method");
-    }
-}
+    }//end onCreate
+}//end class
